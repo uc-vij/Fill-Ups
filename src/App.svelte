@@ -40,18 +40,18 @@
 		}
 	}
 
-	// const app=()=>{
-	// 	document.getElementById("correct").setAttribute("class","d-flex flex-column");
-	// 	const correct_div=document.createElement("div");
-	// 	correct_div.setAttribute("class","d-flex flex-row");
-	// 	correct_div.innerHTML="VIJIT";
-	// 	correct_div.style.border="1px solid black";
-	// 	const para = document.createElement("p");
-	// 	para.innerHTML="VIJIT";
-	// 	document.getElementById("correct").appendChild(correct_div);
-	// 	// document.getElementById("sub_correct").appendChild(para);        // para.innerHTML = "This is a paragraph.";
+	const app=()=>{
+		document.getElementById("correct").setAttribute("class","d-flex flex-column");
+		const correct_div=document.createElement("div");
+		correct_div.setAttribute("class","d-flex flex-row");
+		correct_div.innerHTML="VIJIT";
+		correct_div.style.border="1px solid black";
+		const para = document.createElement("p");
+		para.innerHTML="VIJIT";
+		document.getElementById("correct").appendChild(correct_div);
+		// document.getElementById("sub_correct").appendChild(para);        // para.innerHTML = "This is a paragraph.";
 		
-	// }
+	}
 
 </script>
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
