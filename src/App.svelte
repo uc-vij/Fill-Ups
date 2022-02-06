@@ -62,7 +62,6 @@
 		col_value-=1;
 		var area=document.getElementById("text_correct");
 		var cols=document.getElementById("col_btn");
-		var button_col=document.getElementById("col_inc");
 		var cols_value=area.clientWidth;
 		cols.style.width=cols_value/16.5+"em";
 	}
@@ -71,8 +70,6 @@
 		col_value+=1;
 		var area=document.getElementById("text_correct");
 		var cols=document.getElementById("col_btn");
-		var button_colfirst=document.getElementById("col_dec");
-		var button_colsecond=document.getElementById("col_inc")
 		var cols_value=area.clientWidth;
 		cols.style.width=cols_value/15+"em";
 	}
@@ -237,7 +234,7 @@
 			{/each}
 	</div>
 </form>
-<div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
+<div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 my-1 py-0">
 	<div class="bg-white clearfix border pt-1 pb-0 border-dark border-top-0 border-start-0 border-end-0 border-bottom-0">
 		<span class="h4 mx-3 my-3">Settings</span>
 		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0">&#10005;</button>
