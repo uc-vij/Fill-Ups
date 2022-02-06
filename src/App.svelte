@@ -1,24 +1,18 @@
 <script>
 	let dropDown_Value;
-	let textvalue;
+	let textvalue="Text";
 	let clicked;
 	let click;
 	let list = [];
 	let lastId = 0;
 	let currentAdd='';
 	let col_value=17;
-	let row_value=4;
+	let row_value=5;
 	let default_text;
-	let f;
-	$ : f=textvalue;
 
-
-	
-	
 	const handleAdd = (data) => {
 		clicked=true;
 		if (currentAdd === '') return;
-		if(dropDown_Value!="Text") textvalue='';
 		list = [...list, {
 			id: lastId++,
 			dropvalue_first:dropDown_Value,
@@ -28,6 +22,14 @@
 		}];
 		currentAdd=currentAdd;
 	};
+
+	function change(){
+		currentAdd='';
+		var area=document.getElementById("text_correct");
+		var cols=document.getElementById("col_btn");
+		var total=area.clientWidth;
+		cols.style.width=(total+3)+"px";
+	}
 
 	function myFunction(value){
 		var inp_type=document.getElementsByTagName("INPUT")[0];
@@ -40,23 +42,44 @@
 		}
 	}
 
-	// const app=()=>{
-	// 	document.getElementById("correct").setAttribute("class","d-flex flex-column");
-	// 	const correct_div=document.createElement("div");
-	// 	correct_div.setAttribute("class","d-flex flex-row");
-	// 	correct_div.innerHTML="VIJIT";
-	// 	correct_div.style.border="1px solid black";
-	// 	const para = document.createElement("p");
-	// 	para.innerHTML="VIJIT";
-	// 	document.getElementById("correct").appendChild(correct_div);
-	// 	// document.getElementById("sub_correct").appendChild(para);        // para.innerHTML = "This is a paragraph.";
-		
-	// }
+	function rowinc(){
+		row_value+=1;
+		var area=document.getElementById("text_correct");
+		var rows=document.getElementById("row_btn");
+		var rows_value=area.clientHeight;
+		rows.style.height=(rows_value+23)+"px";
+	}
 
+	function rowdec(){
+		row_value-=1;
+		var area=document.getElementById("text_correct");
+		var rows=document.getElementById("row_btn");
+		var rows_value=area.clientHeight;
+		rows.style.height=(rows_value-23)+"px";
+	}
+
+	function coldec(){
+		col_value-=1;
+		var area=document.getElementById("text_correct");
+		var cols=document.getElementById("col_btn");
+		var button_col=document.getElementById("col_inc");
+		var cols_value=area.clientWidth;
+		cols.style.width=cols_value/16.5+"em";
+	}
+
+	function colinc(){
+		col_value+=1;
+		var area=document.getElementById("text_correct");
+		var cols=document.getElementById("col_btn");
+		var button_colfirst=document.getElementById("col_dec");
+		var button_colsecond=document.getElementById("col_inc")
+		var cols_value=area.clientWidth;
+		cols.style.width=cols_value/15+"em";
+	}
 </script>
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
 	<div class="bg-white clearfix border border-dark border-top-0 border-start-0 border-end-0">
-		<select bind:value={dropDown_Value} on:click={(()=>{currentAdd=''})} class="mx-3 my-2 form-select form-select-sm w-50 d-inline-flex" aria-label="selectValues">
+		<select bind:value={dropDown_Value} on:mouseleave={change} class="mx-3 my-2 form-select form-select-sm w-50 d-inline-flex" aria-label="selectValues">
 			<option selected>Text</option>
 			<option value="Drop Down">Drop Down</option>
 			<option value="Drag and Drop">Drag and Drop</option>
@@ -143,39 +166,41 @@
 				<label class="form-check-label" for="drag_first">Disable drop option after single drop</label>
 			</div>
 			<div class="mb-2 my-2">
-				<p class="">Note: Select checkbox for correct drop value</p>
+				<p>Note: Select checkbox for correct drop value</p>
 			</div>
 		</div>
 	<!-- If Select value is Mulitple Line -->
 	{:else if dropDown_Value=="Multiple Line"}
 	<div class="mb-2 mx-3 my-2 pr-3">
 		<label for="text_correct">Correct Answer</label>
-		<div class="mr-3 d-flex flex-row">
-			<textarea id="text_correct" bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
-			<span class="bg-white mx-3 p-0">
-				<div class="btn-group-vertical border border-dark my-0" role="group" aria-label="Basic example">
-					<button id="row_inc" tabindex="0" name="row_inc px-0 py-3" type="button" on:click={()=>{row_value+=1}} class="bg-white px-0 border border-0" disabled="{row_value==10?true:false}">
-						<i class="fa fa-caret-up mx-2 my-1"></i>
-					</button>
-					<button id="row_val" name="row_val px-0 py-3" type="button" class="bg-white border border-0 px-0">{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-					<button id="row_dec" name="row_dec px-0 py-3" type="button" class="bg-white border border-0 px-0 " on:click="{()=>{row_value-=1}}" disabled="{row_value>4?false:true}">
-						<i class="fa fa-caret-down mx-2"></i>
-					</button>
-				</div>
-			</span>
+		<div class="border border-0 d-flex flex-column overflow-hidden">
+			<div class="mr-3 d-flex flex-row">
+				<textarea id="text_correct" bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
+				<span class="bg-white mx-3 p-0">
+					<div id="row_btn" class="btn-group-vertical border border-dark my-0" role="group" aria-label="Basic example">
+						<button id="row_inc" tabindex="0" name="row_inc" type="button" on:click={rowinc} class="bg-white px-0 my-2 border border-0" disabled="{row_value==10?true:false}">
+							<i class="fa fa-caret-up mx-2 my-1"></i>
+						</button>
+						<button id="row_val" name="row_val" type="button" class="bg-white border border-0 px-1">{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
+						<button id="row_dec" name="row_dec" type="button" class="bg-white border border-0 px-0 my-2 " on:click="{rowdec}" disabled="{row_value>5?false:true}">
+							<i class="fa fa-caret-down mx-2"></i>
+						</button>
+					</div>
+				</span>
+			</div>
+			<div id="col_btn" class="btn-group d-flex flex-row border justify-content-evenly border-dark my-2 overflow-hidden" role="group" aria-label="Basic example">
+				<button id="col_dec" name="col_dec" type="button" on:click={coldec} class="bg-white px-0 py-0 border border-0" disabled="{col_value==17?true:false}">
+					<i class="fa fa-caret-left mx-2"></i>
+				</button>
+				<button id="col_val" name="col_val" type="button" class="bg-white border border-0 px-0 py-0">{col_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
+				<button id="col_inc" name="col_inc" type="button" class="bg-white border border-0 px-0 py-0 mx-0" on:click="{colinc}" disabled="{col_value>=17 && col_value<24?false:true}">
+					<i class="fa fa-caret-right mx-2"></i>
+				</button>
+			</div>
 		</div>
-		<div class="btn-group border border-dark my-2" role="group" aria-label="Basic example">
-			<button id="col_dec" name="col_dec" type="button" on:click={()=>{col_value-=1}} class="bg-white px-3 py-0 border border-0" disabled="{col_value==17?true:false}">
-				<i class="fa fa-caret-left mx-2"></i>
-			</button>
-			<button id="col_val" name="col_val" type="button" class="bg-white border border-0 px-3 py-0 w-100">{col_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-			<button id="col_inc" name="col_inc" type="button" class="bg-white border border-0 px-3 py-0" on:click="{()=>{col_value+=1}}" disabled="{col_value>=17 && col_value<25?false:true}">
-				<i class="fa fa-caret-right mx-2"></i>
-			</button>
-		</div>
-		<div>
+		<div class="border border-0 w-75">
 			<label for="def_text">Default Answer</label>
-			<div class="mr-3">
+			<div class="mr-3 d-flex flex-row">
 				<textarea id="def_text" rows="{row_value}" cols="{col_value}" bind:value="{default_text}"></textarea>
 			</div>
 		</div> 
@@ -247,20 +272,3 @@
 		</footer>
 	</section>
 </div>
-<div class="d-flex flex-row bd-highlight mb-3 border border-dark">
-	<div class="p-2 bd-highlight"><textarea rows="{row_value}" cols="5"></textarea></div>
-	<div class="p-2 bd-highlight border border-dark">
-		<button class="top-4">V</button><br>
-		<div class="btn-group-vertical border border-dark my-0" role="group" aria-label="Basic example">
-			<button id="row_inc" name="row_inc" type="button" on:click={()=>{row_value+=1}} class="bg-white px-0 border border-0" disabled="{row_value==10?true:false}">
-				<i class="fa fa-caret-up mx-2"></i>
-			</button>
-			<button id="row_val" name="row_val" type="button" class="bg-white border border-0 px-0 w-100">{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-			<button id="row_dec" name="row_dec" type="button" class="bg-white border border-0 px-0 " on:click="{()=>{row_value-=1}}" disabled="{row_value>4?false:true}">
-				<i class="fa fa-caret-down mx-2"></i>
-			</button>
-		</div><br><br>
-		<button class="top-50 align-bottom pt-2">V</button>
-	</div>
-	<div class="p-2 bd-highlight">Flex item 3</div>
-  </div>
