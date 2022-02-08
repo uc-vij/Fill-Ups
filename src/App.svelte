@@ -27,6 +27,8 @@
 		currentAdd='';
 		var area=document.getElementById("text_correct");
 		var cols=document.getElementById("col_btn");
+		area.style.resize="none";
+		area.style.overflow="hidden";
 		var total=area.clientWidth;
 		cols.style.width=(total+3)+"px";
 	}
@@ -40,6 +42,12 @@
 			inp_type.setAttribute("max","20");
 			inp_type.setAttribute("min","0");
 		}
+		if(textvalue=="Button"){
+			inp_type.setAttribute("class","w-25 form-control p-1");
+		}
+		else {
+			inp_type.setAttribute("class","w-100");
+		}
 	}
 
 	function rowinc(){
@@ -48,6 +56,7 @@
 		var rows=document.getElementById("row_btn");
 		var rows_value=area.clientHeight;
 		rows.style.height=(rows_value+23)+"px";
+
 	}
 
 	function rowdec(){
@@ -71,7 +80,7 @@
 		var area=document.getElementById("text_correct");
 		var cols=document.getElementById("col_btn");
 		var cols_value=area.clientWidth;
-		cols.style.width=cols_value/15+"em";
+		cols.style.width=cols_value/15.1+"em";
 	}
 </script>
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
@@ -90,23 +99,12 @@
 		<p class="mx-3 my-2">Input type</p>
 		<select class="mx-3 my-0 form-select form-select-sm w-50 d-inline-flex" bind:value={textvalue} on:change={myFunction(textvalue)} aria-label="subSelect">
 			<option value="Text" selected>Text</option>
-			<option value="Button">Button</option>
-			<option value="Checkbox">Checkbox</option>
-			<option value="Color">Color</option>
 			<option value="Date">Date</option>
-			<option value="Datetime-local">Datetime-local</option>
 			<option value="Email">Email</option>
 			<option value="File">File</option>
-			<option value="Hidden">Hidden</option>
-			<option value="Image">Image</option>
 			<option value="Month">Month</option>
 			<option value="Number">Number</option>
 			<option value="Password">Password</option>
-			<option value="Radio">Radio</option>
-			<option value="Range">Range</option>
-			<option value="Reset">Reset</option>
-			<option value="Search">Search</option>
-			<option value="Submit">Submit</option>
 			<option value="Tel">Telephone</option>
 			<option value="Time">Time</option>
 			<option value="Url">Url</option>
@@ -172,20 +170,17 @@
 		<label for="text_correct">Correct Answer</label>
 		<div class="border border-0 d-flex flex-column overflow-hidden">
 			<div class="mr-3 d-flex flex-row">
-				<textarea id="text_correct" bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
-				<span class="bg-white mx-3 p-0">
-					<div id="row_btn" class="btn-group-vertical border border-dark my-0" role="group" aria-label="Basic example">
-						<button id="row_inc" tabindex="0" name="row_inc" type="button" on:click={rowinc} class="bg-white px-0 my-2 border border-0" disabled="{row_value==10?true:false}">
-							<i class="fa fa-caret-up mx-2 my-1"></i>
-						</button>
-						<button id="row_val" name="row_val" type="button" class="bg-white border border-0 px-1">{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-						<button id="row_dec" name="row_dec" type="button" class="bg-white border border-0 px-0 my-2 " on:click="{rowdec}" disabled="{row_value>5?false:true}">
-							<i class="fa fa-caret-down mx-2"></i>
-						</button>
-					</div>
+				<textarea id="text_correct"  bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
+				<span class="bg-white d-flex flex-column justify-content-between mx-2 border border-grey p-0">
+					<button type="button" on:click={rowinc} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
+						<i class="fa fa-caret-up mx-2 my-1"></i></button>
+					<button type="button" class="bg-white p-0 border border-0" id="row_val" name="row_val" >{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
+					<button type="button" id="row_dec" name="row_dec" class="bg-white border border-0 px-0" on:click={rowdec} disabled="{row_value>5?false:true}">
+						<i class="fa fa-caret-down mx-2"></i>
+					</button>
 				</span>
 			</div>
-			<div id="col_btn" class="btn-group d-flex flex-row border justify-content-evenly border-dark my-2 overflow-hidden" role="group" aria-label="Basic example">
+			<div id="col_btn" class="btn-group d-flex flex-row border justify-content-between border-grey my-2 overflow-hidden" role="group" aria-label="Basic example">
 				<button id="col_dec" name="col_dec" type="button" on:click={coldec} class="bg-white px-0 py-0 border border-0" disabled="{col_value==17?true:false}">
 					<i class="fa fa-caret-left mx-2"></i>
 				</button>
