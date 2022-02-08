@@ -67,26 +67,12 @@
 		rows.style.height=(rows_value-23)+"px";
 	}
 
-<<<<<<< HEAD
-	const app=()=>{
-		document.getElementById("correct").setAttribute("class","d-flex flex-column");
-		const correct_div=document.createElement("div");
-		correct_div.setAttribute("class","d-flex flex-row");
-		correct_div.innerHTML="VIJIT";
-		correct_div.style.border="1px solid black";
-		const para = document.createElement("p");
-		para.innerHTML="VIJIT";
-		document.getElementById("correct").appendChild(correct_div);
-		// document.getElementById("sub_correct").appendChild(para);        // para.innerHTML = "This is a paragraph.";
-		
-=======
 	function coldec(){
 		col_value-=1;
 		var area=document.getElementById("text_correct");
 		var cols=document.getElementById("col_btn");
 		var cols_value=area.clientWidth;
 		cols.style.width=cols_value/16.5+"em";
->>>>>>> main
 	}
 
 	function colinc(){
