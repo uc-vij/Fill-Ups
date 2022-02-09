@@ -16,6 +16,7 @@
 	let t_value=[];
 	let Main=writable({
 		type:"1",
+		dropvalue:"Text",
 		fillTextbox:[
 			{
 				checked:"true",
@@ -40,6 +41,19 @@ $: console.log(Main_State);
 	const handleAdd = (data) => {
 		clicked=true;
 		var check_first=document.getElementById("first_check");
+		Main_State.fillDropDown.forEach((item,i)=>{
+			if(item['input'][0]=="*"){
+				console.log("correct",item['input']);
+			}
+			else if(item['input'].includes('#cm')){
+				console.log("contains");
+				addDrop();
+				item['input']=item['input'].replace("#cm",",");
+				let answer=item['input'].split(',');
+				console.log(answer);
+				// item['checked']=true;
+			}
+		})
 	};
 
 	function change(){
@@ -55,7 +69,11 @@ $: console.log(Main_State);
 	}
 
 	function myFunction(value){
-		$: console.log(value);
+		Main_State.fillTextbox.forEach((item,i)=>{
+			// item['value']="Text";
+			item['input']="";
+			$: console.log(item['value']);
+		})
 
 		var inp_type=document.getElementsByTagName("INPUT")[0];
 		if(textvalue=value){
@@ -71,17 +89,6 @@ $: console.log(Main_State);
 		else {
 			inp_type.setAttribute("class","w-100");
 		}
-	}
-
-	function rowinc(){
-		row_value+=1;
-		var area=document.getElementById("text_correct");
-	}
-
-	function rowdec(){
-		row_value-=1;
-		var area=document.getElementById("text_correct");
-		var rows=document.getElementById("row_btn");
 	}
 
 	function coldec(){
@@ -113,11 +120,20 @@ $: console.log(Main_State);
 		Main_State.fillDropDown=temp;
 		$:console.log(Main_State.fillDropDown);
 	}
+	const defaultValue=(value)=>{
+		Main_State.fillTextbox.forEach((item,i)=>{
+			item['value']="Text";
+			item['input']="";
+			$: console.log(item['value']);
+		})
+	}
+
+	// $: console.log(Main_State.dropvalue);
 
 </script>
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
 	<div class="bg-white clearfix border border-dark border-top-0 border-start-0 border-end-0">
-		<select bind:value={dropDown_Value} on:mouseleave={change} class="mx-3 my-2 form-select form-select-sm w-50 d-inline-flex" aria-label="selectValues">
+		<select bind:value={dropDown_Value} on:mouseleave={change}  on:change="{defaultValue(dropDown_Value)}" class="mx-3 my-2 form-select form-select-sm w-50 d-inline-flex" aria-label="selectValues">
 			<option selected>Text</option>
 			<option value="Drop Down">Drop Down</option>
 			<option value="Drag and Drop">Drag and Drop</option>
@@ -208,16 +224,16 @@ $: console.log(Main_State);
 			<div class="mr-3 d-flex flex-row">
 				<textarea id="text_correct" bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
 				<span class="bg-white d-flex flex-column justify-content-between mx-2 border border-grey p-0">
-					<button type="button" on:click={rowinc} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
+					<button type="button" on:click={()=>{row_value+=1}} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
 						<i class="fa fa-caret-up mx-2 my-1"></i></button>
 					<button type="button" class="bg-white p-0 border border-0" id="row_val" name="row_val" >{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-					<button type="button" id="row_dec" name="row_dec" class="bg-white border border-0 px-0" on:click={rowdec} disabled="{row_value>5?false:true}">
+					<button type="button" id="row_dec" name="row_dec" class="bg-white border border-0 px-0" on:click={()=>{row_value-=1}} disabled="{row_value>5?false:true}">
 						<i class="fa fa-caret-down mx-2"></i>
 					</button>
 				</span>
 			</div>
 			<div id="col_btn" class="btn-group d-flex flex-row border justify-content-between border-grey my-2 overflow-hidden" role="group" aria-label="Basic example">
-				<button id="col_dec" name="col_dec" type="button" on:click={coldec} class="bg-white px-0 py-0 border border-0" disabled="{col_value==17?true:false}">
+				<button id="col_dec" name="col_dec" type="button" on:click={coldec} class="bg-white py-0 border border-0" disabled="{col_value==17?true:false}">
 					<i class="fa fa-caret-left mx-2"></i>
 				</button>
 				<button id="col_val" name="col_val" type="button" class="bg-white border border-0 px-0 py-0">{col_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
