@@ -1,7 +1,11 @@
 <script>
+	import { writable } from 'svelte/store';
+	import { onMount, onDestroy } from 'svelte';
 	let dropDown_Value;
+	let dropDownCount=0;
 	let textvalue="Text";
 	let clicked;
+	let fav;
 	let click;
 	let list = [];
 	let lastId = 0;
@@ -9,31 +13,50 @@
 	let col_value=17;
 	let row_value=5;
 	let default_text;
-
+	let t_value=[];
+	let Main=writable({
+		type:"1",
+		fillTextbox:[
+			{
+				checked:"true",
+				value:"Text",
+				input:""
+			}
+		],
+		fillDropDown:[
+			{
+				checked:"",
+				id:0,
+				input:''
+			}
+		]
+	})
+	let Main_State={};
+	Main.subscribe(items=>{
+		Main_State=items;
+	});
+	
+$: console.log(Main_State);
 	const handleAdd = (data) => {
 		clicked=true;
-		if (currentAdd === '') return;
-		list = [...list, {
-			id: lastId++,
-			dropvalue_first:dropDown_Value,
-			inputvalue_first: currentAdd,
-			dropvalue_second: textvalue,
-			default:default_text
-		}];
-		currentAdd=currentAdd;
+		var check_first=document.getElementById("first_check");
 	};
 
 	function change(){
 		currentAdd='';
 		var area=document.getElementById("text_correct");
+		var default_area=document.getElementById("def_text");
 		var cols=document.getElementById("col_btn");
 		area.style.resize="none";
+		default_area.style.resize="none";
 		area.style.overflow="hidden";
 		var total=area.clientWidth;
 		cols.style.width=(total+3)+"px";
 	}
 
 	function myFunction(value){
+		$: console.log(value);
+
 		var inp_type=document.getElementsByTagName("INPUT")[0];
 		if(textvalue=value){
 			inp_type.setAttribute("type",value.toLowerCase());
@@ -53,18 +76,12 @@
 	function rowinc(){
 		row_value+=1;
 		var area=document.getElementById("text_correct");
-		var rows=document.getElementById("row_btn");
-		var rows_value=area.clientHeight;
-		rows.style.height=(rows_value+23)+"px";
-
 	}
 
 	function rowdec(){
 		row_value-=1;
 		var area=document.getElementById("text_correct");
 		var rows=document.getElementById("row_btn");
-		var rows_value=area.clientHeight;
-		rows.style.height=(rows_value-23)+"px";
 	}
 
 	function coldec(){
@@ -82,6 +99,21 @@
 		var cols_value=area.clientWidth;
 		cols.style.width=cols_value/15.1+"em";
 	}
+
+	const addDrop=()=>{
+		dropDownCount+=1;
+		var temp=[];
+		temp=Main_State.fillDropDown;
+		temp.push({
+			checked:"",
+			id:dropDownCount,
+			input:''
+			
+		})
+		Main_State.fillDropDown=temp;
+		$:console.log(Main_State.fillDropDown);
+	}
+
 </script>
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 py-0">
 	<div class="bg-white clearfix border border-dark border-top-0 border-start-0 border-end-0">
@@ -95,9 +127,10 @@
 		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0">&#10005;</button>
 	</div>
 	<!-- If Select value is Text -->
-	{#if dropDown_Value=="Text"}                              
+	{#if dropDown_Value=="Text"}      
+	{#each Main_State.fillTextbox as data,i (i)}                        
 		<p class="mx-3 my-2">Input type</p>
-		<select class="mx-3 my-0 form-select form-select-sm w-50 d-inline-flex" bind:value={textvalue} on:change={myFunction(textvalue)} aria-label="subSelect">
+		<select class="mx-3 my-0 form-select form-select-sm w-50 d-inline-flex" bind:value={data.value} on:change="{myFunction(data.value)}" aria-label="subSelect">
 			<option value="Text" selected>Text</option>
 			<option value="Date">Date</option>
 			<option value="Email">Email</option>
@@ -112,21 +145,23 @@
 		</select>
 		<div class="mb-3 mx-3 my-2 border border-0">                          <!-- Text Correct Answer -->
 			<label for="correctText_answer" class="form-label">Correct Answer</label>
-			<input type="text" class="form-control w-100 p-1"  bind:value={currentAdd} id="correctText_answer" aria-describedby="correctText">
+			<input type="text" class="form-control w-100 p-1"  bind:value={data.input}  id="correctText_answer" aria-describedby="correctText">
 		</div>
 		<div class="form-check mx-3">                          <!-- Text checkbox -->
-			<input class="form-check-input" type="checkbox" value="" id="first_check" checked>
+			<input class="form-check-input" type="checkbox" value="" id="first_check" bind:checked={data.checked}>
 			<label class="form-check-label" for="first_check">User can select any of the answers seperated by comma</label>
 		</div>
+		{/each}
 	<!-- If Select value is Drop Down -->
 	{:else if dropDown_Value=="Drop Down"}
 		<div class="mb-2 mx-3 pr-3 my-2">
 			<label for="dropdown_options" class="form-label">Options</label>
-			<div id="correct">
-				<div class="d-flex flex-row" id="sub_correct" class:d-none={click==true}>
-					<input class="form-check-input mt-2" type="radio" name="dropdown_radio" id="dropdown_radio">          
+			<div id="correct" class="d-flex flex-column">
+				{#each Main_State.fillDropDown as data,i (i) }
+				<div class="d-flex flex-row py-2" id="sub_correct" class:d-none={click==true}>
+					<input class="form-check-input mt-2" type="radio" name="dropdown_radio" checked id="dropdown_radio">          
 					<form role="textbox" class="input-group d-flex border border-rad r mx-2 flex-nowrap w-100 rounded" id="drop_selection">        <!-- Dropdown Options -->
-						<input type="text" class="form-control p-0 border-0 w-50 rounded" bind:value={currentAdd} on:input={()=>{click=false;}} id="input_second" aria-describedby="option">
+						<input type="text" class="form-control p-0 border-0 w-50 rounded" bind:value={data.input} on:input={()=>{click=false;}} id="input_second" aria-describedby="option">
 						<span role="button" tabindex="-1" class="input-group-text bg-light border-0 bg-white pr-1 rounded" class:d-none={click} aria-label="badge" name="badge_first" id="badge_first">
 							<small>
 								<span class="badge bg-secondary">Default</span>
@@ -137,8 +172,9 @@
 						<i class='fas fa-trash-alt'></i>
 					</span>
 				</div>
+				{/each}
 			</div>
-			<button type="button" id="add_optionFirst" name="add_optionFirst" class="btn btn-outline-primary my-3 mx-1" >&#43; Add Option</button>     <!-- Add Option Btn -->
+			<button type="button" id="add_optionFirst" name="add_optionFirst" class="btn btn-outline-primary my-3 mx-1" on:click="{addDrop}">&#43; Add Option</button>     <!-- Add Option Btn -->
 			<div class="mb-2 mx-1">
 				<p class="">Note: Select radio button to indicate correct answer</p>
 			</div>
@@ -170,7 +206,7 @@
 		<label for="text_correct">Correct Answer</label>
 		<div class="border border-0 d-flex flex-column overflow-hidden">
 			<div class="mr-3 d-flex flex-row">
-				<textarea id="text_correct"  bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
+				<textarea id="text_correct" bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
 				<span class="bg-white d-flex flex-column justify-content-between mx-2 border border-grey p-0">
 					<button type="button" on:click={rowinc} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
 						<i class="fa fa-caret-up mx-2 my-1"></i></button>
