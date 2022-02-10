@@ -26,8 +26,10 @@
 	function change(){
 		currentAdd='';
 		var area=document.getElementById("text_correct");
+		var def_area=document.getElementById("def_text");
 		var cols=document.getElementById("col_btn");
 		area.style.resize="none";
+		def_area.style.resize="none";
 		area.style.overflow="hidden";
 		var total=area.clientWidth;
 		cols.style.width=(total+3)+"px";
@@ -48,23 +50,6 @@
 		else {
 			inp_type.setAttribute("class","w-100");
 		}
-	}
-
-	function rowinc(){
-		row_value+=1;
-		var area=document.getElementById("text_correct");
-		var rows=document.getElementById("row_btn");
-		var rows_value=area.clientHeight;
-		rows.style.height=(rows_value+23)+"px";
-
-	}
-
-	function rowdec(){
-		row_value-=1;
-		var area=document.getElementById("text_correct");
-		var rows=document.getElementById("row_btn");
-		var rows_value=area.clientHeight;
-		rows.style.height=(rows_value-23)+"px";
 	}
 
 	function coldec(){
@@ -92,11 +77,11 @@
 			<option value="Multiple Line">Multiple Line</option>
 			<option value="Math Equation">Math Equation</option>
 		</select>
-		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0">&#10005;</button>
+		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0" aria-label="closeButton">&#10005;</button>
 	</div>
 	<!-- If Select value is Text -->
 	{#if dropDown_Value=="Text"}                              
-		<p class="mx-3 my-2">Input type</p>
+		<p class="mx-3 my-2" tabindex="0">Input type</p>
 		<select class="mx-3 my-0 form-select form-select-sm w-50 d-inline-flex" bind:value={textvalue} on:change={myFunction(textvalue)} aria-label="subSelect">
 			<option value="Text" selected>Text</option>
 			<option value="Date">Date</option>
@@ -111,35 +96,35 @@
 			<option value="Week">Week</option>
 		</select>
 		<div class="mb-3 mx-3 my-2 border border-0">                          <!-- Text Correct Answer -->
-			<label for="correctText_answer" class="form-label">Correct Answer</label>
+			<label for="correctText_answer" class="form-label" tabindex="0">Correct Answer</label>
 			<input type="text" class="form-control w-100 p-1"  bind:value={currentAdd} id="correctText_answer" aria-describedby="correctText">
 		</div>
 		<div class="form-check mx-3">                          <!-- Text checkbox -->
 			<input class="form-check-input" type="checkbox" value="" id="first_check" checked>
-			<label class="form-check-label" for="first_check">User can select any of the answers seperated by comma</label>
+			<label class="form-check-label" for="first_check" tabindex="0">User can select any of the answers seperated by comma</label>
 		</div>
 	<!-- If Select value is Drop Down -->
 	{:else if dropDown_Value=="Drop Down"}
 		<div class="mb-2 mx-3 pr-3 my-2">
-			<label for="dropdown_options" class="form-label">Options</label>
+			<label for="dropdown_options" class="form-label" tabindex="0">Options</label>
 			<div id="correct">
 				<div class="d-flex flex-row" id="sub_correct" class:d-none={click==true}>
 					<input class="form-check-input mt-2" type="radio" name="dropdown_radio" id="dropdown_radio">          
 					<form role="textbox" class="input-group d-flex border border-rad r mx-2 flex-nowrap w-100 rounded" id="drop_selection">        <!-- Dropdown Options -->
 						<input type="text" class="form-control p-0 border-0 w-50 rounded" bind:value={currentAdd} on:input={()=>{click=false;}} id="input_second" aria-describedby="option">
-						<span role="button" tabindex="-1" class="input-group-text bg-light border-0 bg-white pr-1 rounded" class:d-none={click} aria-label="badge" name="badge_first" id="badge_first">
+						<span role="button" tabindex="0" class="input-group-text bg-light border-0 bg-white pr-1 rounded" class:d-none={click} aria-label="defaultbadge" name="badge_first" id="badge_first">
 							<small>
 								<span class="badge bg-secondary">Default</span>
 							</small>
 						</span>
 					</form>
-					<span class="mt-sm-1 ml-sm-2" on:click={()=>{currentAdd='';click=true;}}>
+					<span class="mt-sm-1 ml-sm-2" on:click={()=>{currentAdd='';click=true;}} tabindex="0" aria-label="deleteOption">
 						<i class='fas fa-trash-alt'></i>
 					</span>
 				</div>
 			</div>
 			<button type="button" id="add_optionFirst" name="add_optionFirst" class="btn btn-outline-primary my-3 mx-1" >&#43; Add Option</button>     <!-- Add Option Btn -->
-			<div class="mb-2 mx-1">
+			<div class="mb-2 mx-1" tabindex="0">
 				<p class="">Note: Select radio button to indicate correct answer</p>
 			</div>
 		</div>
@@ -172,10 +157,10 @@
 			<div class="mr-3 d-flex flex-row">
 				<textarea id="text_correct"  bind:value="{currentAdd}" rows="{row_value}" cols="{col_value}"></textarea>
 				<span class="bg-white d-flex flex-column justify-content-between mx-2 border border-grey p-0">
-					<button type="button" on:click={rowinc} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
+					<button type="button" on:click={(()=>{row_value+=1})} id="row_inc" name="row_inc" class="bg-white p-0 border border-0" disabled="{row_value==10?true:false}">
 						<i class="fa fa-caret-up mx-2 my-1"></i></button>
 					<button type="button" class="bg-white p-0 border border-0" id="row_val" name="row_val" >{row_value.toLocaleString(undefined, {minimumIntegerDigits: 2,})}</button>
-					<button type="button" id="row_dec" name="row_dec" class="bg-white border border-0 px-0" on:click={rowdec} disabled="{row_value>5?false:true}">
+					<button type="button" id="row_dec" name="row_dec" class="bg-white border border-0 px-0" on:click={()=>{row_value-=1}} disabled="{row_value>5?false:true}">
 						<i class="fa fa-caret-down mx-2"></i>
 					</button>
 				</span>
@@ -219,7 +204,7 @@
 		<button type="button" id="cancel_btn" name="cancel_btn" class="btn btn-outline-secondary bg-white float-end mx-1 text-dark">Cancel</button>
 	</footer>
 </div>
-<form>
+<form role="textbox">
 	<div class="form-group">
 			{#each list as {id,inputvalue_first} (id)}
 				<textarea class="form-control w-50" id="text_first" rows="3" col="2" contenteditable="true">{textvalue}
@@ -229,32 +214,33 @@
 			{/each}
 	</div>
 </form>
+<!-- Settings Dialog Box -->
 <div class="container d-flex flex-column justify-content-start border border-dark w-50 mw-50 mh-50vw h-50vw px-0 my-1 py-0">
 	<div class="bg-white clearfix border pt-1 pb-0 border-dark border-top-0 border-start-0 border-end-0 border-bottom-0">
-		<span class="h4 mx-3 my-3">Settings</span>
-		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0">&#10005;</button>
+		<span class="h4 mx-3 my-3" tabindex="0">Settings</span>
+		<button type="button" id="close_btn" name="close_btn" class="btn px-2 mx-2 py-1 my-1 bg-white float-end my-0" aria-label="settingsClose">&#10005;</button>
 	</div>
 	<section class="d-flex flex-column">
 		<div class="d-flex flex-column">
 			<div class="form-check mx-3 my-2">
 				<input class="form-check-input" type="checkbox" value="" id="setting_first">
-				<label class="form-check-label" for="setting_first">Case Sensitive</label>
+				<label class="form-check-label" for="setting_first" tabindex="0">Case Sensitive</label>
 				<p>
-					<small>Upper and lowercase letters are treated as distinct</small>
+					<small tabindex="0">Upper and lowercase letters are treated as distinct</small>
 				</p>
 			</div>
 			<div class="form-check mx-3 my-2">
 				<input class="form-check-input" type="checkbox" value="" id="setting_second">
-				<label class="form-check-label" for="setting_second">Ignore special characters</label>
+				<label class="form-check-label" for="setting_second" tabindex="0">Ignore special characters</label>
 				<p>
-					<small>Ignore !,&,*,+,(,), and other punctuations marks while matching</small>
+					<small tabindex="0">Ignore !,&,*,+,(,), and other punctuations marks while matching</small>
 				</p>
 			</div>
 			<div class="form-check mx-3 my-2">
 				<input class="form-check-input" type="checkbox" value="" id="setting_third">
-				<label class="form-check-label" for="setting_third">Multiple correct answers</label>
+				<label class="form-check-label" for="setting_third" tabindex="0">Multiple correct answers</label>
 				<p>
-					<small>If there are more than one correct answer.User can choose any one of it</small>
+					<small tabindex="0">If there are more than one correct answer.User can choose any one of it</small>
 				</p>
 			</div>
 		</div>
